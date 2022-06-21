@@ -1,6 +1,7 @@
 const render = require('./src/html.js');
 const Enginerr = require('./lib/Engineer');
 const Intern = require('./lib/Intern.js');
+const Manager = require('./lib/Manager');
 const inquirer = require('inquirer');
 const fs = require('fs');
 
@@ -8,9 +9,14 @@ const path = require('path');
 const htmlDirectory = path.resolve(__dirname, 'dist');
 const htmlCreator = path.join(htmlDirectory, 'team.html');
 
+
+// Creates empty arrays where answers can be pushed to afterwards //
+
 const teamMembers = [];
 const idArray = [];
 
+
+// Creates questions that inquirer will pull from for both engineers and interns //
 const questions = {
     Engineer: [
         {
@@ -64,7 +70,7 @@ const questions = {
                 if(answer !== "") {
                     return true;
                 } else {
-                    return "Please enter a valide Github username!";
+                    return "Please enter a valid Github username!";
                 }
             }
         },
@@ -140,3 +146,69 @@ const questions = {
         },
     ]
 };
+
+// Create function for Manager when they first load the application //
+function createManager() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "managerName",
+            message: "Please enter your name.",
+            validate: answer => {
+                if(answer !== "") {
+                    return true;
+                } else {
+                    return "Please enter a valid name!";
+                }
+            }
+        },
+        {
+            type: "input",
+            name: "managerId",
+            message: "Please enter your ID number.",
+            validate: answer => {
+                const pass = answer.match(/^([1-9][0-9]{0,1})$/);
+                
+                if(pass){
+                    return true;
+                } else {
+                    return "Please enter a valid ID number!";
+                }
+            }
+        },
+        {
+            type: "input",
+            name: "managerEmail",
+            message: "Please enter your email address.",
+            validate: answer => {
+                const pass = answer.match(/\S+@\S+\.\S+/);
+
+                if(pass) {
+                    return true;
+                } else {
+                    return "Please enter a valid email address!";
+                }
+            }
+        },
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "Please enter an office number.",
+            validate: answer => {
+                const pass = answer.match(/^([1-9][0-9]{0,1})$/);
+
+                if(pass) {
+                    return true;
+                } else {
+                    return "Please enter a valid office number!";
+                }
+            }
+        }
+    ])
+    .then(answer => {
+        const manager = new Manager (answer.managerName, answer.managerId, answer.managerEmail, answer.OfficeNumber);
+        teamMembers.push(manager);
+        idArray.push(answer.managerId);
+        addEmployee();
+    })
+}

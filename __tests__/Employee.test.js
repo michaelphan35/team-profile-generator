@@ -31,12 +31,5 @@ test("gets employee's email as an object", () => {
 test("gets employee's role as an object", () => {
     const employee = new Employee('michael');
 
-    employee.role = 'employee';
-
-    expect(employee.getRole()).toBeTruthy();
-
-    employee.role = '';
-
-    expect(employee.getRole()).toBeFalsy();
-
+    expect(employee.getRole()).toEqual(expect.any(String));
 });

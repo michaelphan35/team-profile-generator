@@ -76,5 +76,67 @@ const questions = {
         },
     ],
 
-    
-}
+    Intern: [
+        {
+            type: "input",
+            name: "internName",
+            message: "What is the employee's name?",
+            validate: answer => {
+                if (answer !==''){
+                    return true;
+                } else {
+                    return 'Please enter a valid name!';
+                }
+            }
+        },
+        {
+            type: "input",
+            name: "internId",
+            message: "What is the employee's ID number?",
+            validate: answer => {
+                const pass = answer.match(/^([1-9][0-9]{0,1})$/);
+                
+                if (pass) {
+                    if(idArray.includes(answer)) {
+                        return "This id number is used. Please enter and differert ID."
+                    } else {
+                        return true;
+                    }
+                }
+                return "Please enter an ID number from 1-99.";
+            }
+        },
+        {
+            type: "input",
+            name: "internEmail",
+            message: "What is the employee's email address?",
+            validate: answer => {
+                const pass = answer.match(/\S+@\S+\.\S+/);
+
+                if (pass) {
+                    return true;
+                } else {
+                    return "Please enter a valid email!";
+                }
+            }
+        },
+        {
+            type: "input",
+            name: "internSchool",
+            message: "Please enter the employee's current school.",
+            validate: answer => {
+                if(answer !== "") {
+                    return true;
+                } else {
+                    return "Please enter a valid school name!";
+                }
+            }
+        },
+        {
+            type: "list",
+            name: "addAnother",
+            message: "Would you like to add another employee?",
+            choices: ["yes", "no"]
+        },
+    ]
+};

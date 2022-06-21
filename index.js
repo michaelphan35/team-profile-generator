@@ -1,5 +1,5 @@
 const render = require('./src/html.js');
-const Enginerr = require('./lib/Engineer');
+const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern.js');
 const Manager = require('./lib/Manager');
 const inquirer = require('inquirer');
@@ -211,4 +211,60 @@ function createManager() {
         idArray.push(answer.managerId);
         addEmployee();
     })
+};
+
+// Prompt for choosing which type of member the manager wants to add//
+
+const chooseMember = [
+    {
+        type: "list",
+        name: "employeeJob",
+        message: "What job would you like to add?",
+        choices: ["Engineer", "Intern"]
+    }
+];
+
+// Function to add employee based on Manager's choices //
+
+function addEmployee() {
+    inquirer.prompt(chooseMember)
+        .then(answer => {
+            if (answer === "Engineer") {
+                inquirer.prompt(questions.Engineer)
+                    .then(answer => {
+                        const engineer = new Engineer (answer.engineerName, answer.engineerId, answer.engineerEmail, answer.engineerGit);
+                        teamMembers.push(engineer);
+                        idArray.push(answer.engineerId);
+                        if (answer.addAnother === "yes") {
+                            addEmployee();
+                        } else {
+                            createHTML();
+                        };
+                    });
+            } else if (answer.memberJob === "Intern") {
+                inquirer.prompt(questions.Intern)
+                    .then (answer => {
+                        const intern = new Intern (answer.internName, answer.internId, answer.internEmail, answer.internSchool);
+                        teamMembers.push(intern);
+                        idArray.push(answer.internId);
+                        if (answer.addAnother === "yes") {
+                            addEmployee();
+                        } else {
+                            createHTML();
+                        }
+                    })
+            }
+        })
+}
+
+// Calls create manager function //
+
+createManager();
+
+// Function for writing HTML file //
+
+function createHTML () {
+    if(!fs.existsSync(htmlCreator)) {
+        fs.writeFileSync(htmlCreator, render(teamMembers), "utf-8");
+    }
 }
